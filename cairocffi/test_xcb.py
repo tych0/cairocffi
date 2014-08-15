@@ -10,6 +10,7 @@
     :license: BSD, see LICENSE for details.
 
 """
+import os
 import time
 import xcffib
 import xcffib.xproto
