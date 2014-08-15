@@ -162,22 +162,10 @@ def test_xcb_window(xcb_conn):
     else:
         pytest.fail("Never received ExposeEvent")
 
-    xcb_conn.flush()
-    # Make sure no errors have been thrown
-    ret = True
-    while ret:
-        ret = xcb_conn.poll_for_event()
-
     # create XCB surface on window
     root_visual = find_root_visual(xcb_conn)
     surface = xcb.XCBSurface(xcb_conn, wid, root_visual, width, height)
     assert surface
-
-    xcb_conn.flush()
-    # Make sure no errors have been thrown
-    ret = True
-    while ret:
-        ret = xcb_conn.poll_for_event()
 
     # use xcb surface to create context, draw white
     ctx = Context(surface)
@@ -217,7 +205,6 @@ def test_xcb_window(xcb_conn):
     ctx.paint()
 
     xcb_conn.flush()
-
     # Make sure no errors have been thrown
     ret = True
     while ret:
