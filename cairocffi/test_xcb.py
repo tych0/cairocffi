@@ -26,10 +26,10 @@ def xcb_conn(request):
     Fixture that will setup and take down a xcffib.Connection object running on
     a display spawned by xvfb
     """
-    xvfb = XvfbTest()
-    xvfb.setUp()
-    request.addfinalizer(xvfb.tearDown)
-    return xvfb.conn
+    display = os.environ.get("DISPLAY")
+    conn = xcffib.connect(display)
+    request.addfinalizer(conn.disconnect)
+    return conn
 
 def find_root_visual(conn):
     """Find the xcffib.xproto.VISUALTYPE corresponding to the root visual"""
