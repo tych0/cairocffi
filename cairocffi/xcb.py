@@ -10,6 +10,7 @@
 """
 from xcffib import ffi as xcb_ffi, visualtype_to_c_struct
 import cffi
+import weakref
 
 from . import ffi as cairo_ffi, dlopen, constants
 from .surfaces import Surface, SURFACE_TYPE_TO_CLASS
@@ -21,6 +22,8 @@ ffi.cdef(constants._CAIRO_XCB_HEADERS)
 
 cairo_xcb = dlopen(ffi, 'libcairo.so.2', 'libcairo.2.dylib', 'libcairo-2.dll',
                    'cairo', 'libcairo-2')
+
+weakkeydict = weakref.WeakKeyDictionary()
 
 
 __all__ = ['XCBSurface']
@@ -44,10 +47,11 @@ class XCBSurface(Surface):
     """
     def __init__(self, conn, drawable, visual, width, height):
         c_visual = visualtype_to_c_struct(visual)
+        weakkeydict[self] = c_visual
 
         p = cairo_xcb.cairo_xcb_surface_create(
             conn._conn, drawable, c_visual, width, height)
-        Surface.__init__(self, p, target_keep_alive=c_visual)
+        Surface.__init__(self, p)
 
     def set_size(self, width, height):
         """
