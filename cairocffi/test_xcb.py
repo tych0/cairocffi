@@ -182,7 +182,7 @@ def test_xcb_window(xcb_conn):
     # now move the window and change its size
     width *= 2
     height *= 2
-    xcb_conn.core.ConfigureWindow(
+    xcb_conn.core.ConfigureWindowChecked(
         wid,
         ConfigWindow.X | ConfigWindow.Y | ConfigWindow.Width | ConfigWindow.Height,
         [
