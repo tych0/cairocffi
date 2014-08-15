@@ -10,11 +10,10 @@
     :license: BSD, see LICENSE for details.
 
 """
-
 import time
 import xcffib
-from xcffib.testing import XvfbTest
 import xcffib.xproto
+from xcffib.testing import XvfbTest
 from xcffib.xproto import ConfigWindow, CW, EventMask, GC
 
 import pytest
@@ -46,7 +45,7 @@ def create_window(conn, width, height):
     wid = conn.generate_id()
     default_screen = conn.setup.roots[conn.pref_screen]
 
-    conn.core.CreateWindow(
+    conn.core.CreateWindowChecked(
         default_screen.root_depth,  # depth
         wid,                        # id
         default_screen.root,        # parent
@@ -67,7 +66,7 @@ def create_pixmap(conn, wid, width, height):
     pixmap = conn.generate_id()
     default_screen = conn.setup.roots[conn.pref_screen]
 
-    conn.core.CreatePixmap(
+    conn.core.CreatePixmapChecked(
         default_screen.root_depth,  # depth
         pixmap, # id
         wid,    # drawable (window)
@@ -82,7 +81,7 @@ def create_gc(conn):
     gc = conn.generate_id()
     default_screen = conn.setup.roots[conn.pref_screen]
 
-    conn.core.CreateGC(
+    conn.core.CreateGCChecked(
         gc,                     # id
         default_screen.root,    # drawable
         GC.Foreground | GC.Background,  # value mask
@@ -128,7 +127,7 @@ def test_xcb_pixmap(xcb_conn):
         pytest.fail("Never received ExposeEvent")
 
     # copy the pixmap to the window
-    xcb_conn.core.CopyArea(
+    xcb_conn.core.CopyAreaChecked(
         pixmap, # source
         wid,    # dest
         gc,     # gc
@@ -138,7 +137,6 @@ def test_xcb_pixmap(xcb_conn):
     )
 
     xcb_conn.flush()
-
     # Make sure no errors have been thrown
     ret = True
     while ret:
@@ -164,16 +162,29 @@ def test_xcb_window(xcb_conn):
     else:
         pytest.fail("Never received ExposeEvent")
 
+    xcb_conn.flush()
+    # Make sure no errors have been thrown
+    ret = True
+    while ret:
+        ret = xcb_conn.poll_for_event()
+
     # create XCB surface on window
     root_visual = find_root_visual(xcb_conn)
     surface = xcb.XCBSurface(xcb_conn, wid, root_visual, width, height)
     assert surface
+
+    xcb_conn.flush()
+    # Make sure no errors have been thrown
+    ret = True
+    while ret:
+        ret = xcb_conn.poll_for_event()
 
     # use xcb surface to create context, draw white
     ctx = Context(surface)
     ctx.set_source_rgb(1, 1, 1)
     ctx.paint()
 
+    xcb_conn.flush()
     # Make sure no errors have been thrown
     ret = True
     while ret:
