@@ -152,11 +152,6 @@ def test_xcb_window(xcb_conn):
     # create a new window used to draw with cairo
     wid = create_window(xcb_conn, width, height)
 
-    # create XCB surface on window
-    root_visual = find_root_visual(xcb_conn)
-    surface = xcb.XCBSurface(xcb_conn, wid, root_visual, width, height)
-    assert surface
-
     # map the window and wait for it to appear
     xcb_conn.core.MapWindow(wid)
     xcb_conn.flush()
@@ -168,6 +163,11 @@ def test_xcb_window(xcb_conn):
             break
     else:
         pytest.fail("Never received ExposeEvent")
+
+    # create XCB surface on window
+    root_visual = find_root_visual(xcb_conn)
+    surface = xcb.XCBSurface(xcb_conn, wid, root_visual, width, height)
+    assert surface
 
     # use xcb surface to create context, draw white
     ctx = Context(surface)
