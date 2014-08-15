@@ -176,7 +176,7 @@ def test_xcb_window(xcb_conn):
         ret = xcb_conn.poll_for_event()
 
     # use xcb surface to create context, draw context white
-    ctx = Context(surface)
+    context = Context(surface)
 
     xcb_conn.flush()
     # Make sure no errors have been thrown
@@ -185,16 +185,7 @@ def test_xcb_window(xcb_conn):
     while ret:
         ret = xcb_conn.poll_for_event()
 
-    ctx.set_source_rgb(1, 1, 1)
-
-    xcb_conn.flush()
-    # Make sure no errors have been thrown
-    time.sleep(0.5) # idk, travis is crazy sometimes
-    ret = True
-    while ret:
-        ret = xcb_conn.poll_for_event()
-
-    ctx.paint()
+    context.paint()
 
     xcb_conn.flush()
     # Make sure no errors have been thrown
@@ -227,7 +218,7 @@ def test_xcb_window(xcb_conn):
 
     # re-size and re-draw the surface
     surface.set_size(width, height)
-    ctx.paint()
+    context.paint()
 
     xcb_conn.flush()
     # Make sure no errors have been thrown
