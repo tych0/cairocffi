@@ -47,7 +47,7 @@ class XCBSurface(Surface):
 
         p = cairo_xcb.cairo_xcb_surface_create(
             conn._conn, drawable, c_visual, width, height)
-        Surface.__init__(self, p, target_keep_alive=c_visual)
+        Surface.__init__(self, p)
 
     def set_size(self, width, height):
         """
