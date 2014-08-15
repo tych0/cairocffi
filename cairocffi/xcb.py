@@ -19,9 +19,6 @@ ffi.include(cairo_ffi)
 ffi.include(xcb_ffi)
 ffi.cdef(constants._CAIRO_XCB_HEADERS)
 
-import weakref
-global_weakkeydict = weakref.WeakKeyDictionary()
-
 cairo_xcb = dlopen(ffi, 'libcairo.so.2', 'libcairo.2.dylib', 'libcairo-2.dll',
                    'cairo', 'libcairo-2')
 
@@ -50,7 +47,6 @@ class XCBSurface(Surface):
 
         p = cairo_xcb.cairo_xcb_surface_create(
             conn._conn, drawable, c_visual, width, height)
-        global_weakkeydict[p] = c_visual
         Surface.__init__(self, p)
 
     def set_size(self, width, height):
