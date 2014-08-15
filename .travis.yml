@@ -10,7 +10,7 @@ before_install:
   - "sudo apt-get update"
   - "sudo apt-get install xtrace"
   - "sh -e /etc/init.d/xvfb start"
-  - "xtrace -D:98 -d:99 -k &"
+  - "xtrace -D:98 -d:99 -k -n &"
   - "export DISPLAY=:98.0"
 install:
   - "pip install xcffib"
