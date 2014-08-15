@@ -8,17 +8,10 @@ python:
   - "pypy"
 before_install:
   - "sudo apt-get update"
-  - "sudo apt-get install libxcb1-dev xcb-proto xtrace"
+  - "sudo apt-get install xtrace"
   - "sh -e /etc/init.d/xvfb start"
   - "xtrace -D:98 -d:99 -k -n &"
   - "export DISPLAY=:98.0"
-  - "wget http://cairographics.org/releases/cairo-1.12.16.tar.xz"
-  - "tar xf cairo-1.12.16.tar.xz"
-  - "cd cairo-1.12.16"
-  - "./autogen.sh --enable-xcb --prefix=/usr"
-  - "make"
-  - "sudo make install"
-  - "cd .."
 install:
   - "pip install xcffib"
   - "pip install ."
