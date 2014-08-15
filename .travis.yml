@@ -23,6 +23,7 @@ install:
   - "cabal install --only-dependencies"
   - "cabal configure"
   - "pip install -r requirements.txt"
+  - "make xcffib"
   - "pip install ."
   - "cd .."
   - "pip install ."
