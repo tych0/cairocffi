@@ -47,6 +47,8 @@ class XCBSurface(Surface):
 
         p = cairo_xcb.cairo_xcb_surface_create(
             conn._conn, drawable, c_visual, width, height)
+        global_weakkeydict = weakref.WeakKeyDictionary()
+        global_weakkeydict[p] = c_visual
         Surface.__init__(self, p)
 
     def set_size(self, width, height):
