@@ -10,11 +10,11 @@
     :license: BSD, see LICENSE for details.
 
 """
+
 import os
 import time
 import xcffib
 import xcffib.xproto
-from xcffib.testing import XvfbTest
 from xcffib.xproto import ConfigWindow, CW, EventMask, GC
 
 import pytest
@@ -46,7 +46,7 @@ def create_window(conn, width, height):
     wid = conn.generate_id()
     default_screen = conn.setup.roots[conn.pref_screen]
 
-    conn.core.CreateWindowChecked(
+    conn.core.CreateWindow(
         default_screen.root_depth,  # depth
         wid,                        # id
         default_screen.root,        # parent
@@ -67,7 +67,7 @@ def create_pixmap(conn, wid, width, height):
     pixmap = conn.generate_id()
     default_screen = conn.setup.roots[conn.pref_screen]
 
-    conn.core.CreatePixmapChecked(
+    conn.core.CreatePixmap(
         default_screen.root_depth,  # depth
         pixmap, # id
         wid,    # drawable (window)
@@ -82,7 +82,7 @@ def create_gc(conn):
     gc = conn.generate_id()
     default_screen = conn.setup.roots[conn.pref_screen]
 
-    conn.core.CreateGCChecked(
+    conn.core.CreateGC(
         gc,                     # id
         default_screen.root,    # drawable
         GC.Foreground | GC.Background,  # value mask
@@ -128,7 +128,7 @@ def test_xcb_pixmap(xcb_conn):
         pytest.fail("Never received ExposeEvent")
 
     # copy the pixmap to the window
-    xcb_conn.core.CopyAreaChecked(
+    xcb_conn.core.CopyArea(
         pixmap, # source
         wid,    # dest
         gc,     # gc
@@ -197,7 +197,7 @@ def test_xcb_window(xcb_conn):
     # now move the window and change its size
     width *= 2
     height *= 2
-    xcb_conn.core.ConfigureWindowChecked(
+    xcb_conn.core.ConfigureWindow(
         wid,
         ConfigWindow.X | ConfigWindow.Y | ConfigWindow.Width | ConfigWindow.Height,
         [
