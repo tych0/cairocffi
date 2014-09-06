@@ -16,4 +16,5 @@ before_install:
 install:
   - "pip install xcffib"
   - "pip install ."
-script: "py.test"
+  - sudo apt-get install xtrace
+script: "xtrace -n py.test"
