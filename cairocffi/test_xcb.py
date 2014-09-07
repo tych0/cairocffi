@@ -148,6 +148,10 @@ def test_xcb_pixmap(xcb_conn):
 
     xcb_conn.flush()
 
+    # Clear out the event cache
+    while event:
+        event = xcb_conn.poll_for_event()
+
 
 def test_xcb_window(xcb_conn):
     width = 10
@@ -194,11 +198,7 @@ def test_xcb_window(xcb_conn):
     # wait for the notification of the size change
     start = time.time()
     while time.time() < start + 10:
-        try:
-            event = xcb_conn.wait_for_event()
-        except xcffib.XcffibException:
-            pass
-
+        event = xcb_conn.wait_for_event()
         if isinstance(event, xcffib.xproto.ConfigureNotifyEvent):
             assert event.width == 2*width
             assert event.height == 2*height
@@ -214,3 +214,7 @@ def test_xcb_window(xcb_conn):
     ctx.set_source_rgb(1, 1, 1)
     ctx.paint()
     xcb_conn.flush()
+
+    # Clear out the event cache
+    while event:
+        event = xcb_conn.poll_for_event()
